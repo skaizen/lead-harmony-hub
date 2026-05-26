@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Guarded } from "@/components/Guarded";
 import { useAuth } from "@/lib/auth-context";
 import { checkEnv, pullFromErpnext } from "@/lib/sync.functions";
+import { pullMetaAds, pullGoogleAds } from "@/lib/ads.functions";
 
 export const Route = createFileRoute("/settings")({
   component: () => (
@@ -24,6 +25,18 @@ function SettingsPage() {
   const pull = useMutation({
     mutationFn: () => pullFromErpnext({ data: { accessToken } }),
     onSuccess: (s) => toast.success(`Fetched ${s.fetched}, succeeded ${s.succeeded}, failed ${s.failed}`),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const pullMeta = useMutation({
+    mutationFn: () => pullMetaAds({ data: { accessToken } }),
+    onSuccess: (s) => toast.success(`Meta: fetched ${s.fetched}, upserted ${s.upserted}`),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const pullGoogle = useMutation({
+    mutationFn: () => pullGoogleAds({ data: { accessToken } }),
+    onSuccess: (s) => toast.success(`Google Ads: fetched ${s.fetched}, upserted ${s.upserted}`),
     onError: (e: Error) => toast.error(e.message),
   });
 
@@ -65,6 +78,43 @@ function SettingsPage() {
         >
           {pull.isPending ? "Pulling…" : "Pull from ERPNext"}
         </button>
+      </section>
+
+      <section className="rounded-lg border border-neutral-200 bg-white p-4">
+        <h2 className="mb-2 text-sm font-medium text-neutral-700">Ad insights</h2>
+        <p className="text-xs text-neutral-500">
+          Pull last-30-day insights from Meta and Google Ads into the local tables.
+        </p>
+        <div className="mt-3 flex gap-2">
+          <button
+            type="button"
+            onClick={() => pullMeta.mutate()}
+            disabled={pullMeta.isPending}
+            className="rounded bg-neutral-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+          >
+            {pullMeta.isPending ? "Pulling Meta…" : "Pull Meta Ads"}
+          </button>
+          <button
+            type="button"
+            onClick={() => pullGoogle.mutate()}
+            disabled={pullGoogle.isPending}
+            className="rounded bg-neutral-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+          >
+            {pullGoogle.isPending ? "Pulling Google…" : "Pull Google Ads"}
+          </button>
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-neutral-200 bg-white p-4">
+        <h2 className="mb-2 text-sm font-medium text-neutral-700">WordPress webhook</h2>
+        <p className="text-xs text-neutral-500">
+          Post lead JSON to this URL, signed with HMAC-SHA256 of the raw body using
+          <code className="mx-1">WORDPRESS_WEBHOOK_SECRET</code>, in header
+          <code className="mx-1">x-wp-signature</code>.
+        </p>
+        <code className="mt-2 block break-all rounded bg-neutral-50 p-2 text-xs">
+          POST {typeof window !== "undefined" ? window.location.origin : ""}/api/public/wp-lead
+        </code>
       </section>
     </div>
   );

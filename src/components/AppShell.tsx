@@ -20,7 +20,7 @@ type NavItem = {
 const NAV: NavItem[] = [
   { to: "/", label: "Overview", icon: LayoutDashboard },
   { to: "/leads", label: "Leads", icon: Users },
-  { to: "/analytics", label: "Analytics", icon: BarChart3, disabled: true },
+  { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/sync/logs", label: "ERP Sync Logs", icon: RefreshCw },
   { to: "/settings", label: "Settings", icon: Settings },
 ];

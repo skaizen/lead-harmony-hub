@@ -67,6 +67,14 @@ export const checkEnv = createServerFn({ method: "POST" })
       "ERPNEXT_BASE_URL",
       "ERPNEXT_API_KEY",
       "ERPNEXT_API_SECRET",
+      "WORDPRESS_WEBHOOK_SECRET",
+      "META_ACCESS_TOKEN",
+      "META_AD_ACCOUNT_ID",
+      "GOOGLE_ADS_DEVELOPER_TOKEN",
+      "GOOGLE_ADS_CLIENT_ID",
+      "GOOGLE_ADS_CLIENT_SECRET",
+      "GOOGLE_ADS_REFRESH_TOKEN",
+      "GOOGLE_ADS_CUSTOMER_ID",
     ];
     return names.map((n) => ({ name: n, present: Boolean(env[n]) }));
   });
