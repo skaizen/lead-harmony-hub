@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { requireUser } from "./auth";
-import type { Lead, LeadEvent, LeadSource, LeadStatus } from "@/lib/types";
+import type { ErpSyncLog, Lead, LeadEvent, LeadSource, LeadStatus } from "@/lib/types";
 
 export interface ListLeadsInput {
   accessToken: string | null;
@@ -59,7 +59,7 @@ export const getLead = createServerFn({ method: "POST" })
     return {
       lead: leadRes.data as Lead,
       events: (eventsRes.data ?? []) as LeadEvent[],
-      logs: (logsRes.data ?? []) as unknown[],
+      logs: (logsRes.data ?? []) as ErpSyncLog[],
     };
   });
 
