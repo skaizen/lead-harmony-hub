@@ -74,14 +74,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Truzon LeadsHub" },
+      { name: "description", content: "Lead Harmony Hub centralizes lead management and analytics from multiple sources into a unified dashboard." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Truzon LeadsHub" },
+      { property: "og:description", content: "Lead Harmony Hub centralizes lead management and analytics from multiple sources into a unified dashboard." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Truzon LeadsHub" },
+      { name: "twitter:description", content: "Lead Harmony Hub centralizes lead management and analytics from multiple sources into a unified dashboard." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/16524f5e-f2e6-49d4-bdc7-921769a7fb71/id-preview-460fb8ec--2c18e4a3-1e89-4f0d-8947-6841c974e6fe.lovable.app-1779804595662.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/16524f5e-f2e6-49d4-bdc7-921769a7fb71/id-preview-460fb8ec--2c18e4a3-1e89-4f0d-8947-6841c974e6fe.lovable.app-1779804595662.png" },
     ],
     links: [
       {
