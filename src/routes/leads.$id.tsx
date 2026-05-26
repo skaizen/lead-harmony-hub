@@ -98,7 +98,7 @@ function LeadDetailPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  if (isLoading) return <div className="text-sm text-neutral-500">Loading…</div>;
+  if (isLoading) return <div className="text-sm text-muted-foreground">Loading…</div>;
   if (error) return <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">{(error as Error).message}</div>;
   if (!data) return null;
 
@@ -108,20 +108,20 @@ function LeadDetailPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <Link to="/leads" className="inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-700">
+          <Link to="/leads" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-3 w-3" /> Back to leads
           </Link>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">
             {[lead.first_name, lead.last_name].filter(Boolean).join(" ") || "Unnamed lead"}
           </h1>
-          <p className="text-xs text-neutral-500">Created {new Date(lead.created_at).toLocaleString()}</p>
+          <p className="text-xs text-muted-foreground">Created {new Date(lead.created_at).toLocaleString()}</p>
         </div>
         <button
           type="button"
           onClick={() => sync.mutate()}
           disabled={sync.isPending || !erpConfigured}
           title={!erpConfigured ? "ERPNext not configured — add ERPNEXT_BASE_URL, ERPNEXT_API_KEY, ERPNEXT_API_SECRET to .env" : "Push lead to ERPNext"}
-          className="inline-flex items-center gap-2 rounded bg-neutral-900 px-3 py-2 text-sm text-white disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded bg-solar px-3 py-2 text-sm font-medium text-solar-foreground hover:brightness-110 disabled:opacity-50"
         >
           <RefreshCw className={"h-4 w-4 " + (sync.isPending ? "animate-spin" : "")} />
           Sync to ERPNext
@@ -139,22 +139,22 @@ function LeadDetailPage() {
               <Field label="Company" value={form.company_name ?? ""} onChange={(v) => updateForm({ company_name: v })} />
               <Field label="Owner" value={form.owner ?? ""} onChange={(v) => updateForm({ owner: v })} />
               <label className="col-span-1 flex flex-col text-sm">
-                <span className="text-xs text-neutral-500">Status</span>
+                <span className="text-xs text-muted-foreground">Status</span>
                 <select
                   value={form.status ?? "New"}
                   onChange={(e) => updateForm({ status: e.target.value as LeadStatus })}
-                  className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
+                  className="mt-1 rounded border border-border px-2 py-1.5"
                 >
                   {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </label>
               <label className="col-span-2 flex flex-col text-sm">
-                <span className="text-xs text-neutral-500">Notes</span>
+                <span className="text-xs text-muted-foreground">Notes</span>
                 <textarea
                   rows={3}
                   value={form.notes ?? ""}
                   onChange={(e) => updateForm({ notes: e.target.value })}
-                  className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
+                  className="mt-1 rounded border border-border px-2 py-1.5"
                 />
               </label>
             </div>
@@ -166,7 +166,7 @@ function LeadDetailPage() {
                 type="button"
                 onClick={() => save.mutate()}
                 disabled={save.isPending || !isDirty}
-                className="rounded bg-neutral-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+                className="rounded bg-solar px-3 py-1.5 text-sm font-medium text-solar-foreground hover:brightness-110 disabled:opacity-50"
               >
                 {save.isPending ? "Saving…" : "Save"}
               </button>
@@ -208,16 +208,16 @@ function LeadDetailPage() {
 
         <aside className="space-y-4">
           <Panel title="Timeline">
-            {data.events.length === 0 && <div className="text-sm text-neutral-400">No events yet.</div>}
+            {data.events.length === 0 && <div className="text-sm text-muted-foreground/70">No events yet.</div>}
             <ul className="space-y-3">
               {data.events.map((e) => (
-                <li key={e.id} className="border-l-2 border-neutral-200 pl-3 text-sm">
+                <li key={e.id} className="border-l-2 border-border pl-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="font-medium text-neutral-800">{e.event_type}</span>
-                    <span className="text-xs text-neutral-400">{new Date(e.created_at).toLocaleString()}</span>
+                    <span className="font-medium text-foreground">{e.event_type}</span>
+                    <span className="text-xs text-muted-foreground/70">{new Date(e.created_at).toLocaleString()}</span>
                   </div>
                   {e.payload && (
-                    <pre className="mt-1 overflow-auto rounded bg-neutral-50 p-2 text-[11px] text-neutral-600">
+                    <pre className="mt-1 overflow-auto rounded bg-muted p-2 text-[11px] text-foreground/80">
                       {JSON.stringify(e.payload, null, 2)}
                     </pre>
                   )}
@@ -227,20 +227,20 @@ function LeadDetailPage() {
           </Panel>
 
           <Panel title="Recent sync log">
-            {data.logs.length === 0 && <div className="text-sm text-neutral-400">No sync attempts yet.</div>}
+            {data.logs.length === 0 && <div className="text-sm text-muted-foreground/70">No sync attempts yet.</div>}
             <ul className="space-y-2 text-sm">
               {data.logs.map((l) => {
                 const log = l as { id: string; status: string; direction: string; operation: string; requested_at: string; error_message: string | null };
                 return (
-                  <li key={log.id} className="rounded border border-neutral-100 p-2">
+                  <li key={log.id} className="rounded border border-border p-2">
                     <div className="flex justify-between text-xs">
                       <span className="font-medium">{log.direction} · {log.operation}</span>
                       <span className={
                         log.status === "SUCCESS" ? "text-emerald-600" :
-                        log.status === "FAILED" ? "text-red-600" : "text-neutral-500"
+                        log.status === "FAILED" ? "text-red-600" : "text-muted-foreground"
                       }>{log.status}</span>
                     </div>
-                    <div className="text-xs text-neutral-400">{new Date(log.requested_at).toLocaleString()}</div>
+                    <div className="text-xs text-muted-foreground/70">{new Date(log.requested_at).toLocaleString()}</div>
                     {log.error_message && <div className="mt-1 text-xs text-red-700">{log.error_message}</div>}
                   </li>
                 );
@@ -255,8 +255,8 @@ function LeadDetailPage() {
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-4">
-      <div className="mb-3 text-sm font-medium text-neutral-700">{title}</div>
+    <div className="rounded-lg border border-border bg-card p-4">
+      <div className="mb-3 text-sm font-medium text-foreground">{title}</div>
       {children}
     </div>
   );
@@ -265,8 +265,8 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 function Field({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <label className="flex flex-col text-sm">
-      <span className="text-xs text-neutral-500">{label}</span>
-      <input value={value} onChange={(e) => onChange(e.target.value)} className="mt-1 rounded border border-neutral-200 px-2 py-1.5" />
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <input value={value} onChange={(e) => onChange(e.target.value)} className="mt-1 rounded border border-border px-2 py-1.5" />
     </label>
   );
 }
@@ -276,8 +276,8 @@ function ReadGrid({ items }: { items: Record<string, string | null> }) {
     <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
       {Object.entries(items).map(([k, v]) => (
         <div key={k} className="flex flex-col">
-          <dt className="text-xs uppercase tracking-wide text-neutral-500">{k}</dt>
-          <dd className="text-neutral-800">{v ?? <span className="text-neutral-300">—</span>}</dd>
+          <dt className="text-xs uppercase tracking-wide text-muted-foreground">{k}</dt>
+          <dd className="text-foreground">{v ?? <span className="text-muted-foreground/50">—</span>}</dd>
         </div>
       ))}
     </dl>

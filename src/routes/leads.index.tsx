@@ -80,7 +80,7 @@ function LeadsPage() {
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Leads</h1>
-          <p className="text-sm text-neutral-500">{total} total</p>
+          <p className="text-sm text-muted-foreground">{total} total</p>
         </div>
         <button
           type="button"
@@ -104,22 +104,22 @@ function LeadsPage() {
         />
       )}
 
-      <div className="rounded-lg border border-neutral-200 bg-white p-3">
+      <div className="rounded-lg border border-border bg-card p-3">
         <div className="flex flex-wrap items-end gap-4 text-sm">
           <MultiSelect label="Source" values={SOURCES} selected={sources} onChange={(v) => { setSources(v as LeadSource[]); setPage(0); }} />
           <MultiSelect label="Status" values={STATUSES} selected={statuses} onChange={(v) => { setStatuses(v as LeadStatus[]); setPage(0); }} />
           <label className="flex flex-col">
-            <span className="text-xs text-neutral-500">From</span>
-            <input type="date" value={from} onChange={(e) => { setFrom(e.target.value); setPage(0); }} className="rounded border border-neutral-200 px-2 py-1" />
+            <span className="text-xs text-muted-foreground">From</span>
+            <input type="date" value={from} onChange={(e) => { setFrom(e.target.value); setPage(0); }} className="rounded border border-border px-2 py-1" />
           </label>
           <label className="flex flex-col">
-            <span className="text-xs text-neutral-500">To</span>
-            <input type="date" value={to} onChange={(e) => { setTo(e.target.value); setPage(0); }} className="rounded border border-neutral-200 px-2 py-1" />
+            <span className="text-xs text-muted-foreground">To</span>
+            <input type="date" value={to} onChange={(e) => { setTo(e.target.value); setPage(0); }} className="rounded border border-border px-2 py-1" />
           </label>
           {(sources.length || statuses.length || from || to) ? (
             <button
               type="button"
-              className="ml-auto text-xs text-neutral-500 hover:text-neutral-700"
+              className="ml-auto text-xs text-muted-foreground hover:text-foreground"
               onClick={() => { setSources([]); setStatuses([]); setFrom(""); setTo(""); setPage(0); }}
             >
               Clear filters
@@ -128,9 +128,9 @@ function LeadsPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+      <div className="overflow-hidden rounded-lg border border-border bg-card">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-xs uppercase tracking-wide text-neutral-500">
+          <thead className="bg-muted text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
               <th className="px-3 py-2 text-left">Created</th>
               <th className="px-3 py-2 text-left">Name</th>
@@ -144,7 +144,7 @@ function LeadsPage() {
           </thead>
           <tbody>
             {isLoading && (
-              <tr><td colSpan={8} className="px-3 py-6 text-center text-neutral-400">Loading…</td></tr>
+              <tr><td colSpan={8} className="px-3 py-6 text-center text-muted-foreground/70">Loading…</td></tr>
             )}
             {error && (
               <tr><td colSpan={8} className="px-3 py-6 text-center text-red-600">{(error as Error).message}</td></tr>
@@ -152,16 +152,16 @@ function LeadsPage() {
             {!isLoading && data?.rows.length === 0 && (
               <tr>
                 <td colSpan={8} className="px-3 py-10 text-center">
-                  <p className="text-sm text-neutral-500">No leads found.</p>
+                  <p className="text-sm text-muted-foreground">No leads found.</p>
                   <div className="mt-3 flex justify-center gap-3 text-xs">
                     <button
                       type="button"
                       onClick={() => setShowCreate(true)}
-                      className="inline-flex items-center gap-1 rounded border border-neutral-200 px-3 py-1.5 hover:bg-neutral-50"
+                      className="inline-flex items-center gap-1 rounded border border-border px-3 py-1.5 hover:bg-muted"
                     >
                       <Plus className="h-3 w-3" /> Create one manually
                     </button>
-                    <Link to="/settings" className="inline-flex items-center gap-1 rounded border border-neutral-200 px-3 py-1.5 hover:bg-neutral-50">
+                    <Link to="/settings" className="inline-flex items-center gap-1 rounded border border-border px-3 py-1.5 hover:bg-muted">
                       Pull from ERPNext
                     </Link>
                   </div>
@@ -171,13 +171,13 @@ function LeadsPage() {
             {data?.rows.map((l) => {
               const name = [l.first_name, l.last_name].filter(Boolean).join(" ") || "—";
               return (
-                <tr key={l.id} className="border-t border-neutral-100">
-                  <td className="px-3 py-2 text-neutral-600">
+                <tr key={l.id} className="border-t border-border">
+                  <td className="px-3 py-2 text-foreground/80">
                     {new Date(l.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-3 py-2 font-medium">{name}</td>
-                  <td className="px-3 py-2 text-neutral-600">{l.email ?? "—"}</td>
-                  <td className="px-3 py-2 text-neutral-600">{l.phone ?? "—"}</td>
+                  <td className="px-3 py-2 text-foreground/80">{l.email ?? "—"}</td>
+                  <td className="px-3 py-2 text-foreground/80">{l.phone ?? "—"}</td>
                   <td className="px-3 py-2"><Badge>{l.source}</Badge></td>
                   <td className="px-3 py-2"><Badge tone={statusTone(l.status)}>{l.status}</Badge></td>
                   <td className="px-3 py-2">
@@ -187,18 +187,18 @@ function LeadsPage() {
                         <span className="text-xs">{l.erpnext_lead_name}</span>
                       </span>
                     ) : (
-                      <Circle className="h-4 w-4 text-neutral-300" />
+                      <Circle className="h-4 w-4 text-muted-foreground/50" />
                     )}
                   </td>
                   <td className="px-3 py-2 text-right">
                     <div className="flex justify-end gap-2">
-                      <Link to="/leads/$id" params={{ id: l.id }} className="text-xs text-neutral-700 underline-offset-2 hover:underline">View</Link>
+                      <Link to="/leads/$id" params={{ id: l.id }} className="text-xs text-foreground underline-offset-2 hover:underline">View</Link>
                       <button
                         type="button"
                         disabled={syncingIds.has(l.id) || !erpConfigured}
                         onClick={() => syncLead(l.id)}
                         title={!erpConfigured ? "ERPNext not configured — add ERPNEXT_BASE_URL, ERPNEXT_API_KEY, ERPNEXT_API_SECRET to .env" : "Push lead to ERPNext"}
-                        className="inline-flex items-center gap-1 rounded border border-neutral-200 px-2 py-1 text-xs hover:bg-neutral-50 disabled:opacity-50"
+                        className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-xs hover:bg-muted disabled:opacity-50"
                       >
                         <RefreshCw className={"h-3 w-3 " + (syncingIds.has(l.id) ? "animate-spin" : "")} />
                         Sync
@@ -212,11 +212,11 @@ function LeadsPage() {
         </table>
       </div>
 
-      <div className="flex items-center justify-between text-xs text-neutral-500">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span>Page {page + 1} of {pages}</span>
         <div className="flex gap-2">
-          <button disabled={page === 0} onClick={() => setPage(page - 1)} className="rounded border border-neutral-200 px-2 py-1 disabled:opacity-40">Prev</button>
-          <button disabled={page + 1 >= pages} onClick={() => setPage(page + 1)} className="rounded border border-neutral-200 px-2 py-1 disabled:opacity-40">Next</button>
+          <button disabled={page === 0} onClick={() => setPage(page - 1)} className="rounded border border-border px-2 py-1 disabled:opacity-40">Prev</button>
+          <button disabled={page + 1 >= pages} onClick={() => setPage(page + 1)} className="rounded border border-border px-2 py-1 disabled:opacity-40">Next</button>
         </div>
       </div>
     </div>
@@ -236,7 +236,7 @@ function MultiSelect({
 }) {
   return (
     <div className="flex flex-col">
-      <span className="text-xs text-neutral-500">{label}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
       <div className="flex flex-wrap gap-1 pt-1">
         {values.map((v) => {
           const on = selected.includes(v);
@@ -247,7 +247,7 @@ function MultiSelect({
               onClick={() => onChange(on ? selected.filter((s) => s !== v) : [...selected, v])}
               className={
                 "rounded-full border px-2 py-0.5 text-xs " +
-                (on ? "border-neutral-900 bg-neutral-900 text-white" : "border-neutral-200 text-neutral-600 hover:bg-neutral-50")
+                (on ? "border-solar bg-solar text-solar-foreground" : "border-border text-foreground/80 hover:bg-muted")
               }
             >
               {v}
@@ -261,7 +261,7 @@ function MultiSelect({
 
 function Badge({ children, tone = "neutral" }: { children: React.ReactNode; tone?: "neutral" | "blue" | "green" | "red" | "amber" }) {
   const tones: Record<string, string> = {
-    neutral: "bg-neutral-100 text-neutral-700",
+    neutral: "bg-muted text-foreground",
     blue: "bg-blue-100 text-blue-700",
     green: "bg-emerald-100 text-emerald-700",
     red: "bg-red-100 text-red-700",
