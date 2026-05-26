@@ -41,12 +41,15 @@ export type LeadEventType =
   | "NOTE_ADDED"
   | "ERROR";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type JsonValue = any;
+
 export interface LeadEvent {
   id: string;
   lead_id: string;
   created_at: string;
   event_type: LeadEventType;
-  payload: Record<string, unknown>;
+  payload: JsonValue;
   user_id: string | null;
 }
 
@@ -65,7 +68,7 @@ export interface ErpSyncLog {
   completed_at: string | null;
   erpnext_lead_name: string | null;
   error_message: string | null;
-  payload_snapshot: Record<string, unknown> | null;
+  payload_snapshot: JsonValue | null;
 }
 
 // Aligned to ERPNext Lead DocType core fields.
