@@ -18,6 +18,16 @@ import type {
 
 function mapLeadToErpnext(lead: Lead): ErpnextLeadPayload {
   const fullName = [lead.first_name, lead.last_name].filter(Boolean).join(" ").trim();
+  
+  // Map local statuses ('New', 'Contacted', 'Qualified', 'Converted', 'Lost')
+  // to allowed ERPNext statuses ('Lead', 'Open', 'Replied', 'Opportunity', 'Quotation', 'Lost Quotation', 'Interested', 'Converted', 'Do Not Contact')
+  let erpStatus = "Lead";
+  if (lead.status === "New") erpStatus = "Lead";
+  else if (lead.status === "Contacted") erpStatus = "Open";
+  else if (lead.status === "Qualified") erpStatus = "Interested";
+  else if (lead.status === "Converted") erpStatus = "Converted";
+  else if (lead.status === "Lost") erpStatus = "Do Not Contact";
+
   return {
     lead_name: fullName || lead.email || lead.phone || "Unnamed Lead",
     first_name: lead.first_name ?? undefined,
@@ -25,7 +35,7 @@ function mapLeadToErpnext(lead: Lead): ErpnextLeadPayload {
     email_id: lead.email ?? undefined,
     mobile_no: lead.phone ?? undefined,
     company_name: lead.company_name ?? undefined,
-    status: lead.status,
+    status: erpStatus,
     source: lead.utm_source ?? lead.source,
     notes: lead.notes ?? undefined,
   };
@@ -48,9 +58,27 @@ function mapErpnextToLead(erp: ErpnextLead): Partial<Lead> {
 }
 
 function normalizeStatus(s: string | undefined): Lead["status"] {
-  const allowed: Lead["status"][] = ["New", "Contacted", "Qualified", "Converted", "Lost"];
-  if (s && (allowed as string[]).includes(s)) return s as Lead["status"];
-  return "New";
+  if (!s) return "New";
+  
+  // Normalize allowed ERPNext statuses to local ones
+  switch (s) {
+    case "Lead":
+    case "Open":
+      return "New";
+    case "Replied":
+      return "Contacted";
+    case "Opportunity":
+    case "Quotation":
+    case "Interested":
+      return "Qualified";
+    case "Converted":
+      return "Converted";
+    case "Lost Quotation":
+    case "Do Not Contact":
+      return "Lost";
+    default:
+      return "New";
+  }
 }
 
 export interface SyncResult {
