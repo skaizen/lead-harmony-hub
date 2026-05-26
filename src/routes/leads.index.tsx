@@ -318,84 +318,84 @@ function CreateLeadModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={onClose}>
       <div
-        className="w-full max-w-md rounded-lg border border-neutral-200 bg-white p-6 shadow-xl"
+        className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-2xl text-foreground"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold">New Lead</h2>
-          <button type="button" onClick={onClose} className="text-neutral-400 hover:text-neutral-700">
+          <h2 className="text-base font-semibold text-foreground">New Lead</h2>
+          <button type="button" onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-4 w-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="mt-4 space-y-3 text-sm">
           <div className="grid grid-cols-2 gap-3">
             <label className="flex flex-col">
-              <span className="text-xs text-neutral-500">First name</span>
+              <span className="text-xs text-muted-foreground">First name</span>
               <input
                 value={form.first_name}
                 onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-                className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
+                className="mt-1 rounded border border-border bg-background/50 px-2 py-1.5 text-foreground focus:border-solar focus:outline-none transition-colors"
               />
             </label>
             <label className="flex flex-col">
-              <span className="text-xs text-neutral-500">Last name</span>
+              <span className="text-xs text-muted-foreground">Last name</span>
               <input
                 value={form.last_name}
                 onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-                className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
+                className="mt-1 rounded border border-border bg-background/50 px-2 py-1.5 text-foreground focus:border-solar focus:outline-none transition-colors"
               />
             </label>
           </div>
           <label className="flex flex-col">
-            <span className="text-xs text-neutral-500">Email</span>
+            <span className="text-xs text-muted-foreground">Email</span>
             <input
               type="email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
+              className="mt-1 rounded border border-border bg-background/50 px-2 py-1.5 text-foreground focus:border-solar focus:outline-none transition-colors"
             />
           </label>
           <label className="flex flex-col">
-            <span className="text-xs text-neutral-500">Phone</span>
+            <span className="text-xs text-muted-foreground">Phone</span>
             <input
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
+              className="mt-1 rounded border border-border bg-background/50 px-2 py-1.5 text-foreground focus:border-solar focus:outline-none transition-colors"
             />
           </label>
           <label className="flex flex-col">
-            <span className="text-xs text-neutral-500">Company</span>
+            <span className="text-xs text-muted-foreground">Company</span>
             <input
               value={form.company_name}
               onChange={(e) => setForm({ ...form, company_name: e.target.value })}
-              className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
+              className="mt-1 rounded border border-border bg-background/50 px-2 py-1.5 text-foreground focus:border-solar focus:outline-none transition-colors"
             />
           </label>
           <label className="flex flex-col">
-            <span className="text-xs text-neutral-500">Status</span>
+            <span className="text-xs text-muted-foreground">Status</span>
             <select
               value={form.status}
               onChange={(e) => setForm({ ...form, status: e.target.value as LeadStatus })}
-              className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
+              className="mt-1 rounded border border-border bg-background/50 px-2 py-1.5 text-foreground focus:border-solar focus:outline-none transition-colors"
             >
               {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
           </label>
-          {err && <div className="rounded border border-red-200 bg-red-50 p-2 text-xs text-red-800">{err}</div>}
+          {err && <div className="rounded border border-red-200 bg-red-50/10 p-2 text-xs text-red-400">{err}</div>}
           <div className="flex justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="rounded border border-neutral-200 px-3 py-1.5 text-sm hover:bg-neutral-50"
+              className="rounded border border-border px-3 py-1.5 text-sm hover:bg-muted text-foreground transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={busy}
-              className="rounded bg-neutral-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+              className="rounded bg-solar px-3 py-1.5 text-sm font-medium text-solar-foreground hover:brightness-110 disabled:opacity-50 transition-colors"
             >
               {busy ? "Creating…" : "Create Lead"}
             </button>
