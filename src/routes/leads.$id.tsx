@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import { Guarded } from "@/components/Guarded";
 import { useAuth } from "@/lib/auth-context";
-import { getLead, updateLead } from "@/server/leads";
-import { pushLeadToErpnext } from "@/server/sync";
+import { getLead, updateLead } from "@/lib/leads.functions";
+import { pushLeadToErpnext } from "@/lib/sync.functions";
 import type { Lead, LeadStatus } from "@/lib/types";
 
 export const Route = createFileRoute("/leads/$id")({
