@@ -24,7 +24,7 @@ function Overview() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Overview</h1>
-        <p className="text-sm text-neutral-500">High-level metrics from your lead database.</p>
+        <p className="text-sm text-muted-foreground">High-level metrics from your lead database.</p>
       </div>
 
       {error && (
@@ -49,7 +49,7 @@ function Overview() {
         </Panel>
       </div>
 
-      <p className="text-xs text-neutral-400">
+      <p className="text-xs text-muted-foreground/70">
         Charts and time-series analytics ship in Phase 2.
       </p>
     </div>
@@ -58,8 +58,8 @@ function Overview() {
 
 function Card({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-4">
-      <div className="text-xs uppercase tracking-wide text-neutral-500">{label}</div>
+    <div className="rounded-lg border border-border bg-card p-4">
+      <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
       <div className="mt-1 text-2xl font-semibold">{value}</div>
     </div>
   );
@@ -67,8 +67,8 @@ function Card({ label, value }: { label: string; value: string | number }) {
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-4">
-      <div className="mb-3 text-sm font-medium text-neutral-700">{title}</div>
+    <div className="rounded-lg border border-border bg-card p-4">
+      <div className="mb-3 text-sm font-medium text-foreground">{title}</div>
       {children}
     </div>
   );
@@ -76,19 +76,19 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 
 function Distribution({ data }: { data: Record<string, number> }) {
   const entries = Object.entries(data);
-  if (entries.length === 0) return <div className="text-sm text-neutral-400">No data</div>;
+  if (entries.length === 0) return <div className="text-sm text-muted-foreground/70">No data</div>;
   const max = Math.max(...entries.map(([, v]) => v));
   return (
     <div className="space-y-2">
       {entries.map(([k, v]) => (
         <div key={k} className="text-sm">
           <div className="flex justify-between">
-            <span className="text-neutral-700">{k}</span>
-            <span className="text-neutral-500">{v}</span>
+            <span className="text-foreground">{k}</span>
+            <span className="text-muted-foreground">{v}</span>
           </div>
-          <div className="mt-1 h-1.5 w-full rounded bg-neutral-100">
+          <div className="mt-1 h-1.5 w-full rounded bg-muted">
             <div
-              className="h-1.5 rounded bg-neutral-800"
+              className="h-1.5 rounded bg-solar"
               style={{ width: `${max ? (v / max) * 100 : 0}%` }}
             />
           </div>

@@ -33,10 +33,10 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
-      <div className="w-full max-w-sm rounded-lg border border-neutral-200 bg-white p-6">
+    <div className="flex min-h-screen items-center justify-center bg-muted px-4">
+      <div className="w-full max-w-sm rounded-lg border border-border bg-card p-6">
         <h1 className="text-lg font-semibold">Lead Ops</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           {mode === "signin" ? "Sign in to your dashboard" : "Create an account"}
         </p>
         {!configured && (
@@ -47,24 +47,24 @@ function LoginPage() {
         )}
         <form onSubmit={submit} className="mt-5 space-y-3">
           <label className="block text-sm">
-            <span className="text-neutral-700">Email</span>
+            <span className="text-foreground">Email</span>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
+              className="mt-1 w-full rounded border border-border px-3 py-2 text-sm focus:border-solar focus:outline-none"
             />
           </label>
           <label className="block text-sm">
-            <span className="text-neutral-700">Password</span>
+            <span className="text-foreground">Password</span>
             <input
               type="password"
               required
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
+              className="mt-1 w-full rounded border border-border px-3 py-2 text-sm focus:border-solar focus:outline-none"
             />
           </label>
           {err && <div className="rounded border border-red-200 bg-red-50 p-2 text-xs text-red-800">{err}</div>}
@@ -72,7 +72,7 @@ function LoginPage() {
           <button
             type="submit"
             disabled={busy || !configured}
-            className="w-full rounded bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="w-full rounded bg-solar px-3 py-2 text-sm font-medium text-solar-foreground hover:brightness-110 disabled:opacity-50"
           >
             {busy ? "…" : mode === "signin" ? "Sign in" : "Sign up"}
           </button>
@@ -84,7 +84,7 @@ function LoginPage() {
             setErr(null);
             setMsg(null);
           }}
-          className="mt-3 w-full text-xs text-neutral-500 hover:text-neutral-700"
+          className="mt-3 w-full text-xs text-muted-foreground hover:text-foreground"
         >
           {mode === "signin" ? "Need an account? Sign up" : "Have an account? Sign in"}
         </button>

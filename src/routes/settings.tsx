@@ -44,14 +44,14 @@ function SettingsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-        <p className="text-sm text-neutral-500">Read-only configuration status.</p>
+        <p className="text-sm text-muted-foreground">Read-only configuration status.</p>
       </div>
 
-      <section className="rounded-lg border border-neutral-200 bg-white p-4">
-        <h2 className="mb-3 text-sm font-medium text-neutral-700">Environment variables</h2>
+      <section className="rounded-lg border border-border bg-card p-4">
+        <h2 className="mb-3 text-sm font-medium text-foreground">Environment variables</h2>
         <ul className="space-y-1 text-sm">
           {envStatus?.map((e) => (
-            <li key={e.name} className="flex items-center justify-between border-b border-neutral-100 py-1.5 last:border-0">
+            <li key={e.name} className="flex items-center justify-between border-b border-border py-1.5 last:border-0">
               <code className="text-xs">{e.name}</code>
               <span className={e.present ? "text-emerald-600 text-xs" : "text-red-600 text-xs"}>
                 {e.present ? "set" : "missing"}
@@ -59,30 +59,30 @@ function SettingsPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-xs text-neutral-500">
+        <p className="mt-3 text-xs text-muted-foreground">
           Public vars (<code>VITE_*</code>) live in <code>.env</code>. Server-only secrets are
           configured via Lovable's secret manager or your hosting provider.
         </p>
       </section>
 
-      <section className="rounded-lg border border-neutral-200 bg-white p-4">
-        <h2 className="mb-2 text-sm font-medium text-neutral-700">ERPNext pull</h2>
-        <p className="text-xs text-neutral-500">
+      <section className="rounded-lg border border-border bg-card p-4">
+        <h2 className="mb-2 text-sm font-medium text-foreground">ERPNext pull</h2>
+        <p className="text-xs text-muted-foreground">
           Fetch ERPNext leads modified in the last 24 hours and upsert them into Supabase.
         </p>
         <button
           type="button"
           onClick={() => pull.mutate()}
           disabled={pull.isPending}
-          className="mt-3 rounded bg-neutral-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+          className="mt-3 rounded bg-solar px-3 py-1.5 text-sm font-medium text-solar-foreground hover:brightness-110 disabled:opacity-50"
         >
           {pull.isPending ? "Pulling…" : "Pull from ERPNext"}
         </button>
       </section>
 
-      <section className="rounded-lg border border-neutral-200 bg-white p-4">
-        <h2 className="mb-2 text-sm font-medium text-neutral-700">Ad insights</h2>
-        <p className="text-xs text-neutral-500">
+      <section className="rounded-lg border border-border bg-card p-4">
+        <h2 className="mb-2 text-sm font-medium text-foreground">Ad insights</h2>
+        <p className="text-xs text-muted-foreground">
           Pull last-30-day insights from Meta and Google Ads into the local tables.
         </p>
         <div className="mt-3 flex gap-2">
@@ -90,7 +90,7 @@ function SettingsPage() {
             type="button"
             onClick={() => pullMeta.mutate()}
             disabled={pullMeta.isPending}
-            className="rounded bg-neutral-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+            className="rounded bg-solar px-3 py-1.5 text-sm font-medium text-solar-foreground hover:brightness-110 disabled:opacity-50"
           >
             {pullMeta.isPending ? "Pulling Meta…" : "Pull Meta Ads"}
           </button>
@@ -98,21 +98,21 @@ function SettingsPage() {
             type="button"
             onClick={() => pullGoogle.mutate()}
             disabled={pullGoogle.isPending}
-            className="rounded bg-neutral-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+            className="rounded bg-solar px-3 py-1.5 text-sm font-medium text-solar-foreground hover:brightness-110 disabled:opacity-50"
           >
             {pullGoogle.isPending ? "Pulling Google…" : "Pull Google Ads"}
           </button>
         </div>
       </section>
 
-      <section className="rounded-lg border border-neutral-200 bg-white p-4">
-        <h2 className="mb-2 text-sm font-medium text-neutral-700">WordPress webhook</h2>
-        <p className="text-xs text-neutral-500">
+      <section className="rounded-lg border border-border bg-card p-4">
+        <h2 className="mb-2 text-sm font-medium text-foreground">WordPress webhook</h2>
+        <p className="text-xs text-muted-foreground">
           Post lead JSON to this URL, signed with HMAC-SHA256 of the raw body using
           <code className="mx-1">WORDPRESS_WEBHOOK_SECRET</code>, in header
           <code className="mx-1">x-wp-signature</code>.
         </p>
-        <code className="mt-2 block break-all rounded bg-neutral-50 p-2 text-xs">
+        <code className="mt-2 block break-all rounded bg-muted p-2 text-xs">
           POST {typeof window !== "undefined" ? window.location.origin : ""}/api/public/wp-lead
         </code>
       </section>

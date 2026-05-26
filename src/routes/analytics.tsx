@@ -26,7 +26,7 @@ function AnalyticsPage() {
     enabled: !!accessToken,
   });
 
-  if (isLoading) return <div className="text-sm text-neutral-500">Loading analytics…</div>;
+  if (isLoading) return <div className="text-sm text-muted-foreground">Loading analytics…</div>;
   if (error) return <div className="text-sm text-red-600">{(error as Error).message}</div>;
   if (!data) return null;
 
@@ -36,7 +36,7 @@ function AnalyticsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
-        <p className="text-sm text-neutral-500">Last 30 days across leads + ad spend.</p>
+        <p className="text-sm text-muted-foreground">Last 30 days across leads + ad spend.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -104,8 +104,8 @@ function AnalyticsPage() {
 
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-4">
-      <div className="text-xs uppercase tracking-wide text-neutral-500">{label}</div>
+    <div className="rounded-lg border border-border bg-card p-4">
+      <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
       <div className="mt-1 text-2xl font-semibold">{value}</div>
     </div>
   );
@@ -113,8 +113,8 @@ function Stat({ label, value }: { label: string; value: number | string }) {
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-4">
-      <h2 className="mb-3 text-sm font-medium text-neutral-700">{title}</h2>
+    <div className="rounded-lg border border-border bg-card p-4">
+      <h2 className="mb-3 text-sm font-medium text-foreground">{title}</h2>
       {children}
     </div>
   );

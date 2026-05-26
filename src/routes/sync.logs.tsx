@@ -50,27 +50,27 @@ function SyncLogsPage() {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">ERP Sync Logs</h1>
-        <p className="text-sm text-neutral-500">{total} entries</p>
+        <p className="text-sm text-muted-foreground">{total} entries</p>
       </div>
 
-      <div className="rounded-lg border border-neutral-200 bg-white p-3">
+      <div className="rounded-lg border border-border bg-card p-3">
         <div className="flex flex-wrap items-end gap-4 text-sm">
           <Pills label="Status" values={STATUSES} selected={statuses} onChange={(v) => { setStatuses(v as SyncStatus[]); setPage(0); }} />
           <Pills label="Direction" values={DIRECTIONS} selected={directions} onChange={(v) => { setDirections(v as SyncDirection[]); setPage(0); }} />
           <label className="flex flex-col">
-            <span className="text-xs text-neutral-500">From</span>
-            <input type="date" value={from} onChange={(e) => { setFrom(e.target.value); setPage(0); }} className="rounded border border-neutral-200 px-2 py-1" />
+            <span className="text-xs text-muted-foreground">From</span>
+            <input type="date" value={from} onChange={(e) => { setFrom(e.target.value); setPage(0); }} className="rounded border border-border px-2 py-1" />
           </label>
           <label className="flex flex-col">
-            <span className="text-xs text-neutral-500">To</span>
-            <input type="date" value={to} onChange={(e) => { setTo(e.target.value); setPage(0); }} className="rounded border border-neutral-200 px-2 py-1" />
+            <span className="text-xs text-muted-foreground">To</span>
+            <input type="date" value={to} onChange={(e) => { setTo(e.target.value); setPage(0); }} className="rounded border border-border px-2 py-1" />
           </label>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+      <div className="overflow-hidden rounded-lg border border-border bg-card">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-xs uppercase tracking-wide text-neutral-500">
+          <thead className="bg-muted text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
               <th className="px-3 py-2 text-left">Requested</th>
               <th className="px-3 py-2 text-left">Direction</th>
@@ -83,26 +83,26 @@ function SyncLogsPage() {
             </tr>
           </thead>
           <tbody>
-            {isLoading && <tr><td colSpan={8} className="px-3 py-6 text-center text-neutral-400">Loading…</td></tr>}
+            {isLoading && <tr><td colSpan={8} className="px-3 py-6 text-center text-muted-foreground/70">Loading…</td></tr>}
             {error && <tr><td colSpan={8} className="px-3 py-6 text-center text-red-600">{(error as Error).message}</td></tr>}
             {!isLoading && data?.rows.length === 0 && (
-              <tr><td colSpan={8} className="px-3 py-6 text-center text-neutral-400">No sync log entries yet.</td></tr>
+              <tr><td colSpan={8} className="px-3 py-6 text-center text-muted-foreground/70">No sync log entries yet.</td></tr>
             )}
             {data?.rows.map((log) => (
-              <tr key={log.id} className="cursor-pointer border-t border-neutral-100 hover:bg-neutral-50" onClick={() => setDrawer(log)}>
-                <td className="px-3 py-2 text-neutral-600">{new Date(log.requested_at).toLocaleString()}</td>
+              <tr key={log.id} className="cursor-pointer border-t border-border hover:bg-muted" onClick={() => setDrawer(log)}>
+                <td className="px-3 py-2 text-foreground/80">{new Date(log.requested_at).toLocaleString()}</td>
                 <td className="px-3 py-2">{log.direction}</td>
                 <td className="px-3 py-2">{log.operation}</td>
                 <td className="px-3 py-2">
                   <span className={
                     log.status === "SUCCESS" ? "text-emerald-600" :
                     log.status === "FAILED" ? "text-red-600" :
-                    "text-neutral-500"
+                    "text-muted-foreground"
                   }>{log.status}</span>
                 </td>
-                <td className="px-3 py-2 font-mono text-xs text-neutral-500">{log.lead_id ?? "—"}</td>
+                <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{log.lead_id ?? "—"}</td>
                 <td className="px-3 py-2 text-xs">{log.erpnext_lead_name ?? "—"}</td>
-                <td className="px-3 py-2 text-xs text-neutral-500">{log.completed_at ? new Date(log.completed_at).toLocaleString() : "—"}</td>
+                <td className="px-3 py-2 text-xs text-muted-foreground">{log.completed_at ? new Date(log.completed_at).toLocaleString() : "—"}</td>
                 <td className="px-3 py-2 text-xs text-red-700">{log.error_message ? log.error_message.slice(0, 60) + (log.error_message.length > 60 ? "…" : "") : "—"}</td>
               </tr>
             ))}
@@ -110,21 +110,21 @@ function SyncLogsPage() {
         </table>
       </div>
 
-      <div className="flex items-center justify-between text-xs text-neutral-500">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span>Page {page + 1} of {pages}</span>
         <div className="flex gap-2">
-          <button disabled={page === 0} onClick={() => setPage(page - 1)} className="rounded border border-neutral-200 px-2 py-1 disabled:opacity-40">Prev</button>
-          <button disabled={page + 1 >= pages} onClick={() => setPage(page + 1)} className="rounded border border-neutral-200 px-2 py-1 disabled:opacity-40">Next</button>
+          <button disabled={page === 0} onClick={() => setPage(page - 1)} className="rounded border border-border px-2 py-1 disabled:opacity-40">Prev</button>
+          <button disabled={page + 1 >= pages} onClick={() => setPage(page + 1)} className="rounded border border-border px-2 py-1 disabled:opacity-40">Next</button>
         </div>
       </div>
 
       {drawer && (
         <div className="fixed inset-0 z-50 flex" onClick={() => setDrawer(null)}>
           <div className="flex-1 bg-black/30" />
-          <div className="w-full max-w-xl overflow-auto bg-white p-5 shadow-xl" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-xl overflow-auto bg-card p-5 shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold">Sync log detail</h2>
-              <button onClick={() => setDrawer(null)} className="text-sm text-neutral-500 hover:text-neutral-800">Close</button>
+              <button onClick={() => setDrawer(null)} className="text-sm text-muted-foreground hover:text-foreground">Close</button>
             </div>
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <Info label="Direction" value={drawer.direction} />
@@ -140,8 +140,8 @@ function SyncLogsPage() {
               </div>
             )}
             <div className="mt-4">
-              <div className="mb-1 text-xs uppercase tracking-wide text-neutral-500">payload_snapshot</div>
-              <pre className="max-h-96 overflow-auto rounded bg-neutral-50 p-3 text-[11px] text-neutral-700">
+              <div className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">payload_snapshot</div>
+              <pre className="max-h-96 overflow-auto rounded bg-muted p-3 text-[11px] text-foreground">
                 {JSON.stringify(drawer.payload_snapshot ?? {}, null, 2)}
               </pre>
             </div>
@@ -157,7 +157,7 @@ function Pills({
 }: { label: string; values: readonly string[]; selected: string[]; onChange: (n: string[]) => void }) {
   return (
     <div className="flex flex-col">
-      <span className="text-xs text-neutral-500">{label}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
       <div className="flex flex-wrap gap-1 pt-1">
         {values.map((v) => {
           const on = selected.includes(v);
@@ -168,7 +168,7 @@ function Pills({
               onClick={() => onChange(on ? selected.filter((s) => s !== v) : [...selected, v])}
               className={
                 "rounded-full border px-2 py-0.5 text-xs " +
-                (on ? "border-neutral-900 bg-neutral-900 text-white" : "border-neutral-200 text-neutral-600 hover:bg-neutral-50")
+                (on ? "border-solar bg-solar text-solar-foreground" : "border-border text-foreground/80 hover:bg-muted")
               }
             >{v}</button>
           );
@@ -181,8 +181,8 @@ function Pills({
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs uppercase tracking-wide text-neutral-500">{label}</dt>
-      <dd className="text-neutral-800">{value}</dd>
+      <dt className="text-xs uppercase tracking-wide text-muted-foreground">{label}</dt>
+      <dd className="text-foreground">{value}</dd>
     </div>
   );
 }
