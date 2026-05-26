@@ -1,11 +1,11 @@
-import { getSupabaseAdmin } from "./supabase/server";
+import { getSupabaseAdmin } from "./supabase/admin.server";
 import {
   ErpnextApiError,
   createLead as erpCreateLead,
   getLead as erpGetLead,
   listLeads as erpListLeads,
   updateLead as erpUpdateLead,
-} from "./erpnextClient";
+} from "./erpnextClient.server";
 import type {
   ErpSyncLog,
   ErpnextLead,

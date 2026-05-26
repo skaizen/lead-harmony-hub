@@ -1,10 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin.server";
 import {
   pullUpdatedSince,
   syncLeadToErpnext,
-} from "@/lib/leadSyncService";
-import { requireUser } from "./auth";
+} from "@/lib/leadSyncService.server";
+import { requireUser } from "./auth.functions";
 import type { ErpSyncLog, SyncDirection, SyncStatus } from "@/lib/types";
 
 export const pushLeadToErpnext = createServerFn({ method: "POST" })
@@ -62,7 +62,8 @@ export const checkEnv = createServerFn({ method: "POST" })
     const names = [
       "VITE_SUPABASE_URL",
       "VITE_SUPABASE_ANON_KEY",
-      "SUPABASE_SERVICE_ROLE_KEY",
+      "EXT_SUPABASE_URL",
+      "EXT_SUPABASE_SERVICE_KEY",
       "ERPNEXT_BASE_URL",
       "ERPNEXT_API_KEY",
       "ERPNEXT_API_SECRET",

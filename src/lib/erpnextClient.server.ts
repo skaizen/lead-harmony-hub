@@ -1,4 +1,4 @@
-import { serverEnv } from "./supabase/server";
+import { serverEnv } from "./supabase/admin.server";
 import type { ErpnextLead, ErpnextLeadPayload } from "./types";
 
 // Typed ERPNext REST client. Uses token auth: `Authorization: token api_key:api_secret`.

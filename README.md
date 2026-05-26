@@ -52,10 +52,16 @@ or Lovable's secret manager):
 
 | Name | Purpose |
 |---|---|
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-side admin operations & sync jobs |
+| `EXT_SUPABASE_URL` | Your Supabase project URL (server view) |
+| `EXT_SUPABASE_SERVICE_KEY` | Service-role key — server-side admin & sync jobs |
 | `ERPNEXT_BASE_URL` | e.g. `https://erp.example.com` |
 | `ERPNEXT_API_KEY` | ERPNext API user key |
 | `ERPNEXT_API_SECRET` | ERPNext API user secret |
+
+> The `VITE_*` and `SUPABASE_*` prefixes are reserved by Lovable's secret manager,
+> so the server-side Supabase secrets use the `EXT_` prefix. When running locally
+> or in Antigravity you can use `SUPABASE_SERVICE_ROLE_KEY` directly — the admin
+> client accepts both names.
 
 Generate ERPNext credentials: User → API Access → Generate Keys.
 

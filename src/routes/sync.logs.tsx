@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Guarded } from "@/components/Guarded";
 import { useAuth } from "@/lib/auth-context";
-import { listSyncLogs } from "@/server/sync";
+import { listSyncLogs } from "@/lib/sync.functions";
 import type { ErpSyncLog, SyncDirection, SyncStatus } from "@/lib/types";
 
 export const Route = createFileRoute("/sync/logs")({
