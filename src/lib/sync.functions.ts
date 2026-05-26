@@ -70,3 +70,16 @@ export const checkEnv = createServerFn({ method: "POST" })
     ];
     return names.map((n) => ({ name: n, present: Boolean(env[n]) }));
   });
+
+export const checkErpnextConfig = createServerFn({ method: "POST" })
+  .inputValidator((d: { accessToken: string | null }) => d)
+  .handler(async ({ data }) => {
+    await requireUser(data.accessToken);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const env = ((globalThis as any).process?.env ?? {}) as Record<string, string | undefined>;
+    const configured =
+      Boolean(env["ERPNEXT_BASE_URL"]) &&
+      Boolean(env["ERPNEXT_API_KEY"]) &&
+      Boolean(env["ERPNEXT_API_SECRET"]);
+    return { configured };
+  });

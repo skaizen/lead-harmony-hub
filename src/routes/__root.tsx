@@ -74,14 +74,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Lead Ops — ERPNext Lead Sync Dashboard" },
+      { name: "description", content: "Manage and sync leads between ERPNext and your CRM. View attribution, sync status, and audit logs." },
+      { name: "author", content: "Skaizen" },
+      { property: "og:title", content: "Lead Ops" },
+      { property: "og:description", content: "ERPNext ↔ Supabase lead sync dashboard." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {

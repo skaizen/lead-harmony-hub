@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import { Guarded } from "@/components/Guarded";
 import { useAuth } from "@/lib/auth-context";
 import { getLead, updateLead } from "@/lib/leads.functions";
-import { pushLeadToErpnext } from "@/lib/sync.functions";
+import { checkErpnextConfig, pushLeadToErpnext } from "@/lib/sync.functions";
 import type { Lead, LeadStatus } from "@/lib/types";
 
 export const Route = createFileRoute("/leads/$id")({
@@ -30,11 +30,22 @@ function LeadDetailPage() {
     enabled: !!accessToken,
   });
 
+  const { data: erpConfig } = useQuery({
+    queryKey: ["erpnext-config", accessToken],
+    queryFn: () => checkErpnextConfig({ data: { accessToken } }),
+    enabled: !!accessToken,
+    staleTime: 60_000,
+  });
+  const erpConfigured = erpConfig?.configured ?? false;
+
   const [form, setForm] = useState<Partial<Lead>>({});
+  const pristineRef = useRef<string>("");
+  const [isDirty, setIsDirty] = useState(false);
+
   useEffect(() => {
     if (data?.lead) {
       const l = data.lead;
-      setForm({
+      const initial = {
         first_name: l.first_name,
         last_name: l.last_name,
         email: l.email,
@@ -43,14 +54,35 @@ function LeadDetailPage() {
         status: l.status,
         owner: l.owner,
         notes: l.notes,
-      });
+      };
+      setForm(initial);
+      pristineRef.current = JSON.stringify(initial);
+      setIsDirty(false);
     }
   }, [data?.lead]);
+
+  // Warn before tab close if there are unsaved changes
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (!isDirty) return;
+      e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
+
+  function updateForm(patch: Partial<Lead>) {
+    const next = { ...form, ...patch };
+    setForm(next);
+    setIsDirty(JSON.stringify(next) !== pristineRef.current);
+  }
 
   const save = useMutation({
     mutationFn: () => updateLead({ data: { accessToken, id, patch: form } }),
     onSuccess: () => {
       toast.success("Saved");
+      pristineRef.current = JSON.stringify(form);
+      setIsDirty(false);
       qc.invalidateQueries({ queryKey: ["lead", id] });
     },
     onError: (e: Error) => toast.error(e.message),
@@ -87,7 +119,8 @@ function LeadDetailPage() {
         <button
           type="button"
           onClick={() => sync.mutate()}
-          disabled={sync.isPending}
+          disabled={sync.isPending || !erpConfigured}
+          title={!erpConfigured ? "ERPNext not configured — add ERPNEXT_BASE_URL, ERPNEXT_API_KEY, ERPNEXT_API_SECRET to .env" : "Push lead to ERPNext"}
           className="inline-flex items-center gap-2 rounded bg-neutral-900 px-3 py-2 text-sm text-white disabled:opacity-50"
         >
           <RefreshCw className={"h-4 w-4 " + (sync.isPending ? "animate-spin" : "")} />
@@ -99,17 +132,17 @@ function LeadDetailPage() {
         <section className="lg:col-span-2 space-y-4">
           <Panel title="Lead details">
             <div className="grid grid-cols-2 gap-3 text-sm">
-              <Field label="First name" value={form.first_name ?? ""} onChange={(v) => setForm({ ...form, first_name: v })} />
-              <Field label="Last name" value={form.last_name ?? ""} onChange={(v) => setForm({ ...form, last_name: v })} />
-              <Field label="Email" value={form.email ?? ""} onChange={(v) => setForm({ ...form, email: v })} />
-              <Field label="Phone" value={form.phone ?? ""} onChange={(v) => setForm({ ...form, phone: v })} />
-              <Field label="Company" value={form.company_name ?? ""} onChange={(v) => setForm({ ...form, company_name: v })} />
-              <Field label="Owner" value={form.owner ?? ""} onChange={(v) => setForm({ ...form, owner: v })} />
+              <Field label="First name" value={form.first_name ?? ""} onChange={(v) => updateForm({ first_name: v })} />
+              <Field label="Last name" value={form.last_name ?? ""} onChange={(v) => updateForm({ last_name: v })} />
+              <Field label="Email" value={form.email ?? ""} onChange={(v) => updateForm({ email: v })} />
+              <Field label="Phone" value={form.phone ?? ""} onChange={(v) => updateForm({ phone: v })} />
+              <Field label="Company" value={form.company_name ?? ""} onChange={(v) => updateForm({ company_name: v })} />
+              <Field label="Owner" value={form.owner ?? ""} onChange={(v) => updateForm({ owner: v })} />
               <label className="col-span-1 flex flex-col text-sm">
                 <span className="text-xs text-neutral-500">Status</span>
                 <select
                   value={form.status ?? "New"}
-                  onChange={(e) => setForm({ ...form, status: e.target.value as LeadStatus })}
+                  onChange={(e) => updateForm({ status: e.target.value as LeadStatus })}
                   className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
                 >
                   {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -120,16 +153,19 @@ function LeadDetailPage() {
                 <textarea
                   rows={3}
                   value={form.notes ?? ""}
-                  onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                  onChange={(e) => updateForm({ notes: e.target.value })}
                   className="mt-1 rounded border border-neutral-200 px-2 py-1.5"
                 />
               </label>
             </div>
-            <div className="mt-4 flex justify-end">
+            <div className="mt-4 flex items-center justify-end gap-3">
+              {isDirty && (
+                <span className="text-xs text-amber-600">Unsaved changes</span>
+              )}
               <button
                 type="button"
                 onClick={() => save.mutate()}
-                disabled={save.isPending}
+                disabled={save.isPending || !isDirty}
                 className="rounded bg-neutral-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
               >
                 {save.isPending ? "Saving…" : "Save"}
@@ -163,7 +199,9 @@ function LeadDetailPage() {
           <Panel title="ERPNext linkage">
             <ReadGrid items={{
               erpnext_lead_name: lead.erpnext_lead_name,
-              erpnext_last_synced_at: lead.erpnext_last_synced_at,
+              erpnext_last_synced_at: lead.erpnext_last_synced_at
+                ? new Date(lead.erpnext_last_synced_at).toLocaleString()
+                : null,
             }} />
           </Panel>
         </section>

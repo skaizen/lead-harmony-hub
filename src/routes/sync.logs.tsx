@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Guarded } from "@/components/Guarded";
@@ -100,7 +100,17 @@ function SyncLogsPage() {
                     "text-neutral-500"
                   }>{log.status}</span>
                 </td>
-                <td className="px-3 py-2 font-mono text-xs text-neutral-500">{log.lead_id ?? "—"}</td>
+                <td className="px-3 py-2 font-mono text-xs text-neutral-500">
+                  {log.lead_id ? (
+                    <Link
+                      to="/leads/$id"
+                      params={{ id: log.lead_id }}
+                      className="underline-offset-2 hover:underline hover:text-neutral-800"
+                    >
+                      {log.lead_id.slice(0, 8)}…
+                    </Link>
+                  ) : "—"}
+                </td>
                 <td className="px-3 py-2 text-xs">{log.erpnext_lead_name ?? "—"}</td>
                 <td className="px-3 py-2 text-xs text-neutral-500">{log.completed_at ? new Date(log.completed_at).toLocaleString() : "—"}</td>
                 <td className="px-3 py-2 text-xs text-red-700">{log.error_message ? log.error_message.slice(0, 60) + (log.error_message.length > 60 ? "…" : "") : "—"}</td>
