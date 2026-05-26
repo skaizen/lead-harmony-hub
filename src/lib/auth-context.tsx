@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
-import { getSupabaseBrowser, hasSupabaseBrowserConfig } from "./supabase/browser";
+import { getSupabaseBrowser, hasSupabaseBrowserConfig, loadSupabaseConfig } from "./supabase/browser";
 
 interface AuthCtx {
   session: Session | null;
@@ -16,20 +16,28 @@ interface AuthCtx {
 const Ctx = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const configured = hasSupabaseBrowserConfig();
+  const [configured, setConfigured] = useState(hasSupabaseBrowserConfig());
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(configured);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!configured) return;
-    const sb = getSupabaseBrowser();
-    sb.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setLoading(false);
+    let unsub: (() => void) | undefined;
+    loadSupabaseConfig().then((ok) => {
+      setConfigured(ok);
+      if (!ok) {
+        setLoading(false);
+        return;
+      }
+      const sb = getSupabaseBrowser();
+      sb.auth.getSession().then(({ data }) => {
+        setSession(data.session);
+        setLoading(false);
+      });
+      const { data: sub } = sb.auth.onAuthStateChange((_e, s) => setSession(s));
+      unsub = () => sub.subscription.unsubscribe();
     });
-    const { data: sub } = sb.auth.onAuthStateChange((_e, s) => setSession(s));
-    return () => sub.subscription.unsubscribe();
-  }, [configured]);
+    return () => unsub?.();
+  }, []);
 
   const value = useMemo<AuthCtx>(
     () => ({
