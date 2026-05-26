@@ -10,13 +10,20 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 
-const NAV = [
+type NavItem = {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  disabled?: boolean;
+};
+
+const NAV: NavItem[] = [
   { to: "/", label: "Overview", icon: LayoutDashboard },
   { to: "/leads", label: "Leads", icon: Users },
   { to: "/analytics", label: "Analytics", icon: BarChart3, disabled: true },
   { to: "/sync/logs", label: "ERP Sync Logs", icon: RefreshCw },
   { to: "/settings", label: "Settings", icon: Settings },
-] as const;
+];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { user, signOut } = useAuth();
