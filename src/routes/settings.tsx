@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Guarded } from "@/components/Guarded";
 import { useAuth } from "@/lib/auth-context";
-import { checkEnv, pullFromErpnext } from "@/server/sync";
+import { checkEnv, pullFromErpnext } from "@/lib/sync.functions";
 
 export const Route = createFileRoute("/settings")({
   component: () => (
