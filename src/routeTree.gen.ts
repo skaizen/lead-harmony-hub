@@ -11,10 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LeadsIndexRouteImport } from './routes/leads.index'
 import { Route as SyncLogsRouteImport } from './routes/sync.logs'
 import { Route as LeadsIdRouteImport } from './routes/leads.$id'
+import { Route as ApiPublicWpLeadRouteImport } from './routes/api/public/wp-lead'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -24,6 +26,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -46,60 +53,85 @@ const LeadsIdRoute = LeadsIdRouteImport.update({
   path: '/leads/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicWpLeadRoute = ApiPublicWpLeadRouteImport.update({
+  id: '/api/public/wp-lead',
+  path: '/api/public/wp-lead',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/leads/$id': typeof LeadsIdRoute
   '/sync/logs': typeof SyncLogsRoute
   '/leads/': typeof LeadsIndexRoute
+  '/api/public/wp-lead': typeof ApiPublicWpLeadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/leads/$id': typeof LeadsIdRoute
   '/sync/logs': typeof SyncLogsRoute
   '/leads': typeof LeadsIndexRoute
+  '/api/public/wp-lead': typeof ApiPublicWpLeadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/leads/$id': typeof LeadsIdRoute
   '/sync/logs': typeof SyncLogsRoute
   '/leads/': typeof LeadsIndexRoute
+  '/api/public/wp-lead': typeof ApiPublicWpLeadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/analytics'
     | '/login'
     | '/settings'
     | '/leads/$id'
     | '/sync/logs'
     | '/leads/'
+    | '/api/public/wp-lead'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/settings' | '/leads/$id' | '/sync/logs' | '/leads'
+  to:
+    | '/'
+    | '/analytics'
+    | '/login'
+    | '/settings'
+    | '/leads/$id'
+    | '/sync/logs'
+    | '/leads'
+    | '/api/public/wp-lead'
   id:
     | '__root__'
     | '/'
+    | '/analytics'
     | '/login'
     | '/settings'
     | '/leads/$id'
     | '/sync/logs'
     | '/leads/'
+    | '/api/public/wp-lead'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
   LoginRoute: typeof LoginRoute
   SettingsRoute: typeof SettingsRoute
   LeadsIdRoute: typeof LeadsIdRoute
   SyncLogsRoute: typeof SyncLogsRoute
   LeadsIndexRoute: typeof LeadsIndexRoute
+  ApiPublicWpLeadRoute: typeof ApiPublicWpLeadRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -146,17 +185,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/wp-lead': {
+      id: '/api/public/wp-lead'
+      path: '/api/public/wp-lead'
+      fullPath: '/api/public/wp-lead'
+      preLoaderRoute: typeof ApiPublicWpLeadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
   LoginRoute: LoginRoute,
   SettingsRoute: SettingsRoute,
   LeadsIdRoute: LeadsIdRoute,
   SyncLogsRoute: SyncLogsRoute,
   LeadsIndexRoute: LeadsIndexRoute,
+  ApiPublicWpLeadRoute: ApiPublicWpLeadRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
