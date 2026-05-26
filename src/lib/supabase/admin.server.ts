@@ -11,11 +11,16 @@ function readEnv(name: string): string | undefined {
 }
 
 export function getSupabaseAdmin(): SupabaseClient {
-  const url = readEnv("VITE_SUPABASE_URL") ?? readEnv("SUPABASE_URL");
-  const serviceKey = readEnv("SUPABASE_SERVICE_ROLE_KEY");
+  const url =
+    readEnv("EXT_SUPABASE_URL") ??
+    readEnv("VITE_SUPABASE_URL") ??
+    readEnv("SUPABASE_URL");
+  const serviceKey =
+    readEnv("EXT_SUPABASE_SERVICE_KEY") ??
+    readEnv("SUPABASE_SERVICE_ROLE_KEY");
   if (!url || !serviceKey) {
     throw new Error(
-      "Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY env var on the server.",
+      "Missing EXT_SUPABASE_URL or EXT_SUPABASE_SERVICE_KEY env var on the server.",
     );
   }
   return createClient(url, serviceKey, {

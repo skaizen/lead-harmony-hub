@@ -62,7 +62,8 @@ export const checkEnv = createServerFn({ method: "POST" })
     const names = [
       "VITE_SUPABASE_URL",
       "VITE_SUPABASE_ANON_KEY",
-      "SUPABASE_SERVICE_ROLE_KEY",
+      "EXT_SUPABASE_URL",
+      "EXT_SUPABASE_SERVICE_KEY",
       "ERPNEXT_BASE_URL",
       "ERPNEXT_API_KEY",
       "ERPNEXT_API_SECRET",
