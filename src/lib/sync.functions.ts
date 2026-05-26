@@ -1,10 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin.server";
 import {
   pullUpdatedSince,
   syncLeadToErpnext,
-} from "@/lib/leadSyncService";
-import { requireUser } from "./auth";
+} from "@/lib/leadSyncService.server";
+import { requireUser } from "./auth.functions";
 import type { ErpSyncLog, SyncDirection, SyncStatus } from "@/lib/types";
 
 export const pushLeadToErpnext = createServerFn({ method: "POST" })

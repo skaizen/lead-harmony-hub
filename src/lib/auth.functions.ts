@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin.server";
 
 // Verifies a Supabase access token (passed from the client) and returns the user id.
 // Server functions that mutate data should call this first.

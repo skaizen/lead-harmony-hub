@@ -4,8 +4,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Guarded } from "@/components/Guarded";
 import { useAuth } from "@/lib/auth-context";
-import { listLeads } from "@/server/leads";
-import { pushLeadToErpnext } from "@/server/sync";
+import { listLeads } from "@/lib/leads.functions";
+import { pushLeadToErpnext } from "@/lib/sync.functions";
 import type { LeadSource, LeadStatus } from "@/lib/types";
 import { CheckCircle2, Circle, RefreshCw } from "lucide-react";
 

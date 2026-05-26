@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Guarded } from "@/components/Guarded";
 import { useAuth } from "@/lib/auth-context";
-import { getOverviewStats } from "@/server/leads";
+import { getOverviewStats } from "@/lib/leads.functions";
 
 export const Route = createFileRoute("/")({
   component: () => (

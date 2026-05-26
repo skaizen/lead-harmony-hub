@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
-import { requireUser } from "./auth";
+import { getSupabaseAdmin } from "@/lib/supabase/admin.server";
+import { requireUser } from "./auth.functions";
 import type { ErpSyncLog, Lead, LeadEvent, LeadSource, LeadStatus } from "@/lib/types";
 
 export interface ListLeadsInput {
