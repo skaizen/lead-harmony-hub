@@ -86,9 +86,9 @@ function Distribution({ data }: { data: Record<string, number> }) {
             <span className="text-foreground">{k}</span>
             <span className="text-muted-foreground">{v}</span>
           </div>
-          <div className="mt-1 h-1.5 w-full rounded bg-neutral-100">
+          <div className="mt-1 h-1.5 w-full rounded bg-muted">
             <div
-              className="h-1.5 rounded bg-neutral-800"
+              className="h-1.5 rounded bg-solar"
               style={{ width: `${max ? (v / max) * 100 : 0}%` }}
             />
           </div>

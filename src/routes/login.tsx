@@ -53,7 +53,7 @@ function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded border border-border px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
+              className="mt-1 w-full rounded border border-border px-3 py-2 text-sm focus:border-solar focus:outline-none"
             />
           </label>
           <label className="block text-sm">
@@ -64,7 +64,7 @@ function LoginPage() {
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded border border-border px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
+              className="mt-1 w-full rounded border border-border px-3 py-2 text-sm focus:border-solar focus:outline-none"
             />
           </label>
           {err && <div className="rounded border border-red-200 bg-red-50 p-2 text-xs text-red-800">{err}</div>}
@@ -72,7 +72,7 @@ function LoginPage() {
           <button
             type="submit"
             disabled={busy || !configured}
-            className="w-full rounded bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="w-full rounded bg-solar px-3 py-2 text-sm font-medium text-solar-foreground hover:brightness-110 disabled:opacity-50"
           >
             {busy ? "…" : mode === "signin" ? "Sign in" : "Sign up"}
           </button>
