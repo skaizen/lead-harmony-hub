@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Guarded } from "@/components/Guarded";
 import { useAuth } from "@/lib/auth-context";
 import { createLead, listLeads } from "@/lib/leads.functions";
-import { checkErpnextConfig, pushLeadToErpnext } from "@/lib/sync.functions";
+import { checkErpnextConfig, pushLeadToErpnext, pullFromErpnext } from "@/lib/sync.functions";
 import type { LeadSource, LeadStatus } from "@/lib/types";
 import { CheckCircle2, Circle, Plus, RefreshCw, X } from "lucide-react";
 
@@ -72,6 +72,21 @@ function LeadsPage() {
     }
   }, [accessToken, qc]);
 
+  const [pulling, setPulling] = useState(false);
+
+  const pullLeads = useCallback(async () => {
+    setPulling(true);
+    try {
+      const res = await pullFromErpnext({ data: { accessToken } });
+      toast.success(`Pulled from ERPNext: Fetched ${res.fetched}, Succeeded ${res.succeeded}, Failed ${res.failed}`);
+      qc.invalidateQueries({ queryKey: ["leads"] });
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setPulling(false);
+    }
+  }, [accessToken, qc]);
+
   const total = data?.total ?? 0;
   const pages = Math.max(1, Math.ceil(total / 25));
 
@@ -82,14 +97,26 @@ function LeadsPage() {
           <h1 className="text-2xl font-semibold tracking-tight">Leads</h1>
           <p className="text-sm text-muted-foreground">{total} total</p>
         </div>
-        <button
-          type="button"
-          onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-1.5 rounded bg-neutral-900 px-3 py-2 text-sm font-medium text-white hover:bg-neutral-700"
-        >
-          <Plus className="h-4 w-4" />
-          New Lead
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            disabled={pulling || !erpConfigured}
+            onClick={pullLeads}
+            title={!erpConfigured ? "ERPNext not configured — add ERPNEXT_BASE_URL, ERPNEXT_API_KEY, ERPNEXT_API_SECRET to .env" : "Pull leads from ERPNext"}
+            className="inline-flex items-center gap-1.5 rounded border border-border px-3 py-2 text-sm font-medium text-foreground hover:bg-muted disabled:opacity-50 transition-colors cursor-pointer"
+          >
+            <RefreshCw className={"h-4 w-4 " + (pulling ? "animate-spin" : "")} />
+            Sync with ERPNext
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowCreate(true)}
+            className="inline-flex items-center gap-1.5 rounded bg-solar px-3 py-2 text-sm font-medium text-solar-foreground hover:brightness-110 transition-colors cursor-pointer"
+          >
+            <Plus className="h-4 w-4" />
+            New Lead
+          </button>
+        </div>
       </div>
 
       {showCreate && (
